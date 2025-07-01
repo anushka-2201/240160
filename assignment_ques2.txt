@@ -1,0 +1,77 @@
+Q-2 - I have first written the recursive code to this question, then I used dp array of size 101*101 to memoize it. I have attached both codes in the code file. This code uses the same logic as lcs, only difference is that the string ans stores the common subsquence found so far, the val variable stores the length of longest common subsequence, which is also passed as parameter to the function. Once the length of common subsequence becomes equal to val, it is pushed inside the set. I have used set to avoid repreated subsequences. So, basically, the same function also calculates length of lcs first, and then using the same function I print all subsequence of that length.
+int main()
+{
+    string str;
+    cin>>str;
+    string str1;
+    cin>>str1;
+    string ans1;
+    memset(dp, -1, sizeof(dp));
+    int ans = findLCS(str, str1, 0, 0, ans1, 0);
+    int ans2 = findLCS(str, str1, 0, 0, ans1, ans);
+    for(const auto& s : set) {
+        cout<<s<<"\n";
+    }
+    return 0;
+}
+int findLCS(string str, string str1, int i, int j, string ans, int val) {
+    int n = str.length();
+    int m = str1.length();
+    
+    if(i == n || j == m) {
+        if(ans.length() == val) set.insert(ans);
+        return 0;
+    }
+    if(dp[i][j]!=-1) return dp[i][j];
+    if(str[i] == str1[j]) {
+        ans.push_back(str[i]);
+        dp[i][j] = 1 + findLCS(str, str1, i + 1, j + 1, ans, val);
+        return dp[i][j];
+    }
+
+    int opt1 = findLCS(str, str1, i + 1, j, ans, val);
+    int opt2 = findLCS(str, str1, i, j + 1, ans, val);
+    
+    dp[i][j] = max(opt1, opt2);
+    return dp[i][j];
+}
+#include <iostream>
+#include <string>
+#include <unordered_set>
+using namespace std;
+unordered_set<string> set;
+int findLCS(string str, string str1, int i, int j, string ans, int val);
+int main()
+{
+    string str;
+    cin>>str;
+    string str1;
+    cin>>str1;
+    string ans1;
+    int ans = findLCS(str, str1, 0, 0, ans1, 0);
+    int ans2 = findLCS(str, str1, 0, 0, ans1, ans);
+    for(const auto& s : set) {
+        cout<<s<<"\n";
+    }
+    return 0;
+}
+int findLCS(string str, string str1, int i, int j, string ans, int val) {
+    int n = str.length();
+    int m = str1.length();
+    
+    if(i == n || j == m) {
+	if(ans.length() == val) set.insert(ans);
+
+        return 0;
+    }
+
+    if(str[i] == str1[j]) {
+        ans.push_back(str[i]);
+        return 1 + findLCS(str, str1, i + 1, j + 1, ans, val);
+    }
+
+    int opt1 = findLCS(str, str1, i + 1, j, ans, val);
+    int opt2 = findLCS(str, str1, i, j + 1, ans, val);
+
+    return max(opt1, opt2);
+}

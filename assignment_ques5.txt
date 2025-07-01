@@ -1,0 +1,30 @@
+Q-5 So, for this question, I had to use a 3D array dp to memorize my purely recursive solution. The dimensions of the array are according to constraints given in the question. The last parameter is 2 to store true of false. The logic is very simple, the Boolean variable canBuy tracks if we already have purchased a stock, so we need to sell it before buy another. If we can buy a stock, we can either buy it or skip it. Profit variable stores the max of the two. If we cant buy, we call either sell or not sell, again profit stores max of the two. Then, whatever comes up as profit, we store it in dp, and then return the same. The base cases are if idx goes out of bounds and another one to check if k is zero, as we are only supposed to make k transactions. 
+int dp[1001][101][2];
+    int maxProfit(int k, vector<int>& prices) {
+        memset(dp, -1, sizeof(dp));
+        return helper(prices, 0, k, true);
+        
+    }
+    int helper(vector<int>& vect, int idx, int k, bool canBuy) {
+        int n = vect.size();
+        if(idx>=n) return 0;
+        if(k == 0) return 0;
+        if(dp[idx][k][canBuy]!=-1) return dp[idx][k][canBuy];
+        int profit = 0;
+        int pick = 0;
+        int skip = 0;
+        int sell = 0;
+        int noSell = 0;
+        if(canBuy) {
+            pick = -vect[idx]+helper(vect, idx+1, k, false);
+            skip = helper(vect, idx+1, k, true);
+            profit = max(pick, skip);
+        }else {
+            sell = vect[idx]+helper(vect, idx+1, k-1, true);
+            noSell = helper(vect, idx+1, k, false);
+            profit = max(sell, noSell);
+        }
+        dp[idx][k][canBuy] = profit;
+        return dp[idx][k][canBuy];
+    }
+};
